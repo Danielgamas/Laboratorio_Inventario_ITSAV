@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Equipos | Sistema ISC{% endblock %}
+{% block content %}
+<section class="content-section">
+  <div class="container-fluid px-4">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="card sie-card sticky-form">
+          <div class="card-header sie-card-header">Registrar equipo</div>
+          <div class="card-body">
+            <form method="post">
+              <label class="form-label">No. inventario*</label><input name="numero_inventario" class="form-control" required>
+              <label class="form-label mt-2">No. serie</label><input name="numero_serie" class="form-control">
+              <label class="form-label mt-2">Nombre*</label><input name="nombre" class="form-control" required>
+              <div class="row g-2"><div class="col-md-6"><label class="form-label mt-2">Tipo*</label><input name="tipo" class="form-control" required></div><div class="col-md-6"><label class="form-label mt-2">Estado</label><select name="estado" class="form-select"><option>Disponible</option><option>Mantenimiento</option><option>Baja</option></select></div></div>
+              <div class="row g-2"><div class="col-md-6"><label class="form-label mt-2">Marca</label><input name="marca" class="form-control"></div><div class="col-md-6"><label class="form-label mt-2">Modelo</label><input name="modelo" class="form-control"></div></div>
+              <label class="form-label mt-2">Ubicación</label><input name="ubicacion" class="form-control" value="Laboratorio ISC">
+              <label class="form-label mt-2">Estado físico</label><select name="estado_fisico" class="form-select"><option>Bueno</option><option>Regular</option><option>Dañado</option></select>
+              <label class="form-label mt-2">Observaciones</label><textarea name="observaciones" class="form-control" rows="2"></textarea>
+              <button class="btn btn-sie w-100 mt-3"><i class="bi bi-plus-circle"></i> Guardar equipo</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="page-heading compact">
+          <span class="top-kicker dark">INVENTARIO</span>
+          <h1>Equipos del laboratorio</h1>
+        </div>
+        <form class="row g-2 mb-3" method="get">
+          <div class="col-md-7"><input name="q" value="{{ q }}" class="form-control" placeholder="Buscar por nombre, inventario, tipo o marca"></div>
+          <div class="col-md-3"><select name="estado" class="form-select"><option value="">Todos</option>{% for opt in ['Disponible','Prestado','Mantenimiento','Baja'] %}<option value="{{ opt }}" {% if estado==opt %}selected{% endif %}>{{ opt }}</option>{% endfor %}</select></div>
+          <div class="col-md-2"><button class="btn btn-outline-sie w-100">Filtrar</button></div>
+        </form>
+        <div class="card sie-card"><div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead><tr><th>Inventario</th><th>Equipo</th><th>Tipo</th><th>Ubicación</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody>{% for e in equipos %}<tr><td class="fw-semibold">{{ e.numero_inventario }}</td><td>{{ e.nombre }}<br><small class="text-muted">{{ e.marca or '' }} {{ e.modelo or '' }} · Serie: {{ e.numero_serie or 'N/A' }}</small></td><td>{{ e.tipo }}</td><td>{{ e.ubicacion }}</td><td><span class="badge badge-estado {{ e.estado|lower }}">{{ e.estado }}</span></td><td class="text-nowrap"><a class="btn btn-sm btn-outline-sie" href="{{ url_for('editar_equipo', id=e.id) }}"><i class="bi bi-pencil"></i></a><form method="post" action="{{ url_for('eliminar_equipo', id=e.id) }}" class="d-inline" onsubmit="return confirm('¿Eliminar equipo?')"><button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button></form></td></tr>{% else %}<tr><td colspan="6" class="text-center text-muted py-4">Sin equipos registrados.</td></tr>{% endfor %}</tbody>
+          </table>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

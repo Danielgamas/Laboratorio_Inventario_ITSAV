@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>{% block title %}Sistema de Inventario ISC{% endblock %}</title>
+
+  <!-- Bootstrap -->
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+    rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" 
+    rel="stylesheet">
+
+  <!-- Estilos propios -->
+  <link 
+    href="{{ url_for('static', filename='style.css') }}" 
+    rel="stylesheet">
+
+  <style>
+    /* Seguridad extra para que ningún logo se vuelva gigante */
+    .nav-logo,
+    .navbar-brand img {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      max-width: 0 !important;
+      max-height: 0 !important;
+    }
+
+    .sie-navbar {
+      background: #0b3d35;
+      min-height: 64px;
+    }
+
+    .navbar-brand {
+      font-size: 1.2rem;
+      color: #ffffff !important;
+    }
+
+    .navbar-nav .nav-link {
+      color: rgba(255, 255, 255, 0.86) !important;
+      font-weight: 500;
+    }
+
+    .navbar-nav .nav-link:hover {
+      color: #d8b35a !important;
+    }
+
+    .btn-sie-gold {
+      background: #d8b35a;
+      color: #0b3d35;
+      border: none;
+      font-weight: 700;
+    }
+
+    .btn-sie-gold:hover {
+      background: #caa34d;
+      color: #0b3d35;
+    }
+
+    main {
+      min-height: calc(100vh - 120px);
+    }
+
+    .footer-itsav {
+      background: #0b3d35;
+      color: rgba(255,255,255,0.75);
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark sie-navbar shadow-sm">
+  <div class="container-fluid px-4">
+
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ url_for('index') }}">
+      <i class="bi bi-pc-display-horizontal"></i>
+      Lab ISC Inventario
+    </a>
+
+    <button 
+      class="navbar-toggler" 
+      type="button" 
+      data-bs-toggle="collapse" 
+      data-bs-target="#navbarSistema"
+      aria-controls="navbarSistema"
+      aria-expanded="false"
+      aria-label="Abrir menú">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSistema">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+
+        {% if usuario_sesion %}
+
+          {% if rol_sesion in ['Administrador', 'Encargado'] %}
+
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('dashboard') }}">
+                <i class="bi bi-speedometer2"></i> Dashboard
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('equipos') }}">
+                <i class="bi bi-pc-display"></i> Equipos
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('usuarios') }}">
+                <i class="bi bi-people"></i> Usuarios
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('prestamos') }}">
+                <i class="bi bi-arrow-left-right"></i> Préstamos
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('reportes') }}">
+                <i class="bi bi-graph-up"></i> Reportes
+              </a>
+            </li>
+
+          {% endif %}
+
+          {% if rol_sesion in ['Estudiante', 'Docente'] %}
+
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('estudiante_dashboard') }}">
+                <i class="bi bi-house"></i> Portal
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('estudiante_equipos') }}">
+                <i class="bi bi-pc-display-horizontal"></i> Equipos disponibles
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('mis_solicitudes') }}">
+                <i class="bi bi-card-checklist"></i> Mis solicitudes
+              </a>
+            </li>
+
+          {% endif %}
+
+          <li class="nav-item">
+            <span class="nav-link text-warning fw-semibold">
+              <i class="bi bi-person-circle"></i>
+              {{ nombre_sesion or usuario_sesion }}
+            </span>
+          </li>
+
+          <li class="nav-item">
+            <a class="btn btn-outline-light btn-sm rounded-pill px-3" href="{{ url_for('logout') }}">
+              <i class="bi bi-box-arrow-right"></i> Salir
+            </a>
+          </li>
+
+        {% else %}
+
+          <li class="nav-item">
+            <a class="btn btn-outline-light btn-sm rounded-pill px-3" href="{{ url_for('consulta_publica') }}">
+              <i class="bi bi-search"></i> Consulta pública
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="btn btn-outline-light btn-sm rounded-pill px-3" href="{{ url_for('registro') }}">
+              <i class="bi bi-person-plus"></i> Registro
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="btn btn-sie-gold btn-sm rounded-pill px-3" href="{{ url_for('login') }}">
+              <i class="bi bi-box-arrow-in-right"></i> Entrar
+            </a>
+          </li>
+
+        {% endif %}
+
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="container mt-3">
+        {% for category, message in messages %}
+
+          {% if category == 'error' %}
+            {% set category = 'danger' %}
+          {% endif %}
+
+          <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+            {{ message }}
+            <button 
+              type="button" 
+              class="btn-close" 
+              data-bs-dismiss="alert" 
+              aria-label="Cerrar">
+            </button>
+          </div>
+
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+
+</main>
+
+<footer class="footer-itsav text-center py-3">
+  Instituto Tecnológico Superior de Alvarado | Ingeniería en Sistemas Computacionales | 2026
+</footer>
+
+<script 
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>

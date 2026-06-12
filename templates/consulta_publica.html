@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Consulta pública | Sistema de Inventario ISC{% endblock %}
+{% block content %}
+<section class="content-section">
+  <div class="container">
+    <div class="page-heading">
+      <span class="top-kicker dark">CONSULTA PÚBLICA</span>
+      <h1>Equipos disponibles del laboratorio</h1>
+      <p>Vista de solo lectura para consultar disponibilidad sin modificar datos del sistema.</p>
+    </div>
+    <form class="row g-2 mb-4" method="get">
+      <div class="col-md-10"><input name="q" value="{{ q }}" class="form-control form-control-lg" placeholder="Buscar por nombre, inventario, tipo o marca"></div>
+      <div class="col-md-2"><button class="btn btn-sie w-100 btn-lg">Buscar</button></div>
+    </form>
+    <div class="row g-3">
+      {% for e in equipos %}
+      <div class="col-md-6 col-lg-4">
+        <div class="equipment-card">
+          <span class="badge badge-soft-success">Disponible</span>
+          <h3>{{ e.nombre }}</h3>
+          <p>{{ e.numero_inventario }} · {{ e.tipo }}</p>
+          <div class="small text-muted">{{ e.marca or 'Marca no registrada' }} {{ e.modelo or '' }}<br>{{ e.ubicacion }}</div>
+        </div>
+      </div>
+      {% else %}
+      <div class="col-12"><div class="empty-state">No se encontraron equipos disponibles.</div></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

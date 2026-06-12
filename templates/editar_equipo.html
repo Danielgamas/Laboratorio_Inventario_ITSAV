@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Editar equipo | Sistema de Inventario ISC{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-primary text-white fw-bold">Editar equipo</div>
+      <div class="card-body">
+        <form method="post">
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label">No. inventario*</label><input name="numero_inventario" class="form-control" value="{{ equipo.numero_inventario }}" required></div>
+            <div class="col-md-6"><label class="form-label">No. serie</label><input name="numero_serie" class="form-control" value="{{ equipo.numero_serie or '' }}"></div>
+            <div class="col-md-12"><label class="form-label">Nombre*</label><input name="nombre" class="form-control" value="{{ equipo.nombre }}" required></div>
+            <div class="col-md-4"><label class="form-label">Tipo*</label><input name="tipo" class="form-control" value="{{ equipo.tipo }}" required></div>
+            <div class="col-md-4"><label class="form-label">Marca</label><input name="marca" class="form-control" value="{{ equipo.marca or '' }}"></div>
+            <div class="col-md-4"><label class="form-label">Modelo</label><input name="modelo" class="form-control" value="{{ equipo.modelo or '' }}"></div>
+            <div class="col-md-4"><label class="form-label">Ubicación</label><input name="ubicacion" class="form-control" value="{{ equipo.ubicacion }}"></div>
+            <div class="col-md-4"><label class="form-label">Estado físico</label><select name="estado_fisico" class="form-select">{% for op in ['Bueno','Regular','Dañado'] %}<option {% if equipo.estado_fisico==op %}selected{% endif %}>{{ op }}</option>{% endfor %}</select></div>
+            <div class="col-md-4"><label class="form-label">Estado</label><select name="estado" class="form-select">{% for op in ['Disponible','Prestado','Mantenimiento','Baja'] %}<option {% if equipo.estado==op %}selected{% endif %}>{{ op }}</option>{% endfor %}</select></div>
+            <div class="col-12"><label class="form-label">Observaciones</label><textarea name="observaciones" class="form-control" rows="3">{{ equipo.observaciones or '' }}</textarea></div>
+          </div>
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <a href="{{ url_for('equipos') }}" class="btn btn-outline-secondary">Cancelar</a>
+            <button class="btn btn-primary">Guardar cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

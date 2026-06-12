@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Editar usuario | Sistema de Inventario ISC{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-lg-7"><div class="card shadow-sm border-0"><div class="card-header bg-primary text-white fw-bold">Editar usuario</div><div class="card-body">
+<form method="post" class="row g-3">
+  <div class="col-12"><label class="form-label">Nombre completo*</label><input name="nombre_completo" class="form-control" value="{{ usuario.nombre_completo }}" required></div>
+  <div class="col-md-6"><label class="form-label">Matrícula*</label><input name="matricula" class="form-control" value="{{ usuario.matricula }}" required></div>
+  <div class="col-md-6"><label class="form-label">Tipo</label><select name="tipo_usuario" class="form-select">{% for op in ['Estudiante','Docente','Encargado'] %}<option {% if usuario.tipo_usuario==op %}selected{% endif %}>{{ op }}</option>{% endfor %}</select></div>
+  <div class="col-md-8"><label class="form-label">Carrera/Área*</label><input name="carrera_area" class="form-control" value="{{ usuario.carrera_area }}" required></div>
+  <div class="col-md-4"><label class="form-label">Activo</label><select name="activo" class="form-select"><option value="1" {% if usuario.activo %}selected{% endif %}>Sí</option><option value="0" {% if not usuario.activo %}selected{% endif %}>No</option></select></div>
+  <div class="col-12"><label class="form-label">Correo</label><input name="correo" type="email" class="form-control" value="{{ usuario.correo or '' }}"></div>
+  <div class="col-12 text-end"><a href="{{ url_for('usuarios') }}" class="btn btn-outline-secondary">Cancelar</a><button class="btn btn-primary">Guardar cambios</button></div>
+</form>
+</div></div></div></div>
+{% endblock %}

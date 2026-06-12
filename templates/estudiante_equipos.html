@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Equipos disponibles | Sistema ISC{% endblock %}
+{% block content %}
+<section class="content-section">
+  <div class="container">
+    <div class="page-heading compact">
+      <span class="top-kicker dark">PORTAL ESTUDIANTE</span>
+      <h1>Equipos disponibles para préstamo</h1>
+      <p>Selecciona un recurso del laboratorio y envía tu solicitud al administrador.</p>
+    </div>
+    <form class="row g-2 mb-4" method="get">
+      <div class="col-md-10"><input name="q" value="{{ q }}" class="form-control form-control-lg" placeholder="Buscar por nombre, inventario, tipo o marca"></div>
+      <div class="col-md-2"><button class="btn btn-sie w-100 btn-lg">Buscar</button></div>
+    </form>
+    <div class="row g-3">
+      {% for e in equipos %}
+      <div class="col-md-6 col-lg-4">
+        <div class="equipment-card h-100">
+          <span class="badge badge-soft-success">Disponible</span>
+          <h3>{{ e.nombre }}</h3>
+          <p>{{ e.numero_inventario }} · {{ e.tipo }}</p>
+          <div class="small text-muted mb-3">{{ e.marca or 'Marca no registrada' }} {{ e.modelo or '' }}<br>{{ e.ubicacion }}</div>
+          <a href="{{ url_for('estudiante_solicitar', id=e.id) }}" class="btn btn-sie w-100"><i class="bi bi-send"></i> Solicitar préstamo</a>
+        </div>
+      </div>
+      {% else %}
+      <div class="col-12"><div class="empty-state">No hay equipos disponibles con ese criterio.</div></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

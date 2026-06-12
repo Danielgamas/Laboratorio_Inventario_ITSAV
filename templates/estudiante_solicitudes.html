@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Mis solicitudes | Sistema ISC{% endblock %}
+{% block content %}
+<section class="content-section">
+  <div class="container">
+    <div class="page-heading compact">
+      <span class="top-kicker dark">PORTAL ESTUDIANTE</span>
+      <h1>Mis solicitudes y préstamos</h1>
+      <p>Seguimiento de solicitudes enviadas, préstamos aprobados, devoluciones y rechazos.</p>
+    </div>
+    <div class="card sie-card">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead><tr><th>Equipo</th><th>Fecha de solicitud</th><th>Fecha estimada</th><th>Estado</th><th>Observaciones</th></tr></thead>
+          <tbody>
+            {% for p in solicitudes %}
+            <tr>
+              <td>{{ p.equipo.nombre }}<br><small class="text-muted">{{ p.equipo.numero_inventario }}</small></td>
+              <td>{{ p.fecha_prestamo.strftime('%d/%m/%Y %H:%M') }}</td>
+              <td>{{ p.fecha_devolucion_estimada.strftime('%d/%m/%Y') }}</td>
+              <td><span class="badge {{ 'bg-warning text-dark' if p.estado=='Solicitado' else 'bg-success' if p.estado=='Devuelto' else 'bg-primary' if p.estado=='Activo' else 'bg-danger' if p.estado=='Vencido' else 'bg-secondary' }}">{{ p.estado }}</span></td>
+              <td>{{ p.observaciones or 'Sin observaciones' }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="5" class="text-center text-muted py-4">No tienes solicitudes registradas.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

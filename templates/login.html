@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}Acceso | Sistema de Inventario ISC{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-7 col-lg-5">
+
+        <div class="auth-card shadow-lg">
+
+          <div class="text-center mb-4">
+            <div class="top-kicker dark mt-3">
+              ACCESO AL SISTEMA
+            </div>
+
+            <h2 class="fw-bold mt-2">
+              {% if perfil == 'estudiante' %}
+                Portal académico
+              {% elif perfil == 'admin' %}
+                Portal administrativo
+              {% else %}
+                Iniciar sesión
+              {% endif %}
+            </h2>
+
+            <p class="text-muted mb-0">
+              Sistema de inventario y préstamos del laboratorio ISC
+            </p>
+          </div>
+
+          <form method="post">
+
+            <div class="mb-3">
+              <label class="form-label">Usuario, correo o matrícula</label>
+              <input
+                type="text"
+                name="usuario"
+                class="form-control form-control-lg"
+                placeholder="Ingresa tus datos de acceso"
+                required
+                autofocus>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Contraseña</label>
+              <input
+                type="password"
+                name="password"
+                class="form-control form-control-lg"
+                placeholder="Ingresa tu contraseña"
+                required>
+            </div>
+
+            <button class="btn btn-sie w-100 btn-lg" type="submit">
+              <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
+            </button>
+
+          </form>
+
+          {% if perfil == 'estudiante' %}
+          <div class="text-center mt-4">
+            <a href="{{ url_for('registro') }}" class="text-decoration-none">
+              ¿No tienes cuenta? Regístrate aquí
+            </a>
+          </div>
+          {% endif %}
+
+          {% if perfil != 'estudiante' %}
+          <div class="text-center mt-4">
+            <a href="{{ url_for('registro') }}" class="text-decoration-none">
+              Registro para estudiantes y docentes
+            </a>
+          </div>
+          {% endif %}
+
+          <div class="text-center mt-2">
+            <a href="{{ url_for('index') }}" class="text-decoration-none text-muted">
+              Volver al inicio
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

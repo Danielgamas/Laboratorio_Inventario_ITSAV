@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %}Inicio | Sistema de Inventario ISC{% endblock %}
+
+{% block content %}
+
+<section class="sie-hero">
+  <div class="hero-overlay">
+    <div class="container text-center text-white">
+
+      <div class="hero-logo-wrap">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="ITSAV" class="hero-logo">
+      </div>
+
+      <div class="top-kicker">
+        LABORATORIO ISC · PLATAFORMA ACADÉMICA
+      </div>
+
+      <h1 class="hero-title">
+        Sistema Web de Inventario<br>
+        y Préstamos
+      </h1>
+
+      <h4 class="hero-subtitle">
+        Laboratorio de Ingeniería en Sistemas Computacionales · ITSAV
+      </h4>
+
+      <p class="hero-description">
+        Plataforma académica desarrollada con Python, Flask, SQLite y Bootstrap para registrar equipos,
+        administrar usuarios, controlar solicitudes de préstamo, validar devoluciones y consultar reportes del laboratorio.
+      </p>
+
+      <div class="hero-stats">
+        <span><strong>Equipos</strong> registrados</span>
+        <span><strong>Equipos</strong> disponibles</span>
+        <span><strong>4</strong> perfiles de acceso</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="access-section">
+  <div class="container">
+    <div class="access-panel shadow-lg">
+
+      <div class="row g-4 justify-content-center">
+
+        <div class="col-md-6 col-lg-3">
+          <a href="{{ url_for('login', perfil='admin') }}" class="access-card">
+            <div class="access-icon">
+              <i class="bi bi-shield-lock"></i>
+            </div>
+            <h3>Administrador</h3>
+            <p>
+              Gestión completa del inventario, usuarios, préstamos, devoluciones y reportes.
+            </p>
+            <span class="access-link">Entrar como admin <i class="bi bi-arrow-right"></i></span>
+          </a>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <a href="{{ url_for('login', perfil='estudiante') }}" class="access-card">
+            <div class="access-icon">
+              <i class="bi bi-mortarboard"></i>
+            </div>
+            <h3>Estudiante / Docente</h3>
+            <p>
+              Consulta equipos disponibles, solicita préstamos y revisa el estado de sus solicitudes.
+            </p>
+            <span class="access-link">Entrar al portal <i class="bi bi-arrow-right"></i></span>
+          </a>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <a href="{{ url_for('registro') }}" class="access-card">
+            <div class="access-icon">
+              <i class="bi bi-person-plus"></i>
+            </div>
+            <h3>Registro</h3>
+            <p>
+              Crea una cuenta como estudiante, docente o encargado del laboratorio.
+            </p>
+            <span class="access-link">Crear cuenta <i class="bi bi-arrow-right"></i></span>
+          </a>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <a href="{{ url_for('consulta_publica') }}" class="access-card">
+            <div class="access-icon">
+              <i class="bi bi-search"></i>
+            </div>
+            <h3>Consulta pública</h3>
+            <p>
+              Visualización rápida de equipos disponibles sin modificar información del sistema.
+            </p>
+            <span class="access-link">Consultar disponibilidad <i class="bi bi-arrow-right"></i></span>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

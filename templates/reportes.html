@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+{% block title %}Reportes | Sistema de Inventario ISC{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4 px-4">
+
+  <div class="mb-4">
+    <div class="top-kicker dark">REPORTES DEL SISTEMA</div>
+    <h1 class="section-title mb-1">Resumen general del laboratorio</h1>
+    <p class="text-muted">
+      Consulta rápida del estado del inventario, usuarios registrados y movimientos de préstamo.
+    </p>
+  </div>
+
+  <div class="row g-4 mb-4">
+
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <div class="text-muted small">Total de equipos</div>
+          <h2 class="fw-bold text-success">{{ total_equipos }}</h2>
+          <p class="mb-0 text-muted">Equipos registrados en inventario.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <div class="text-muted small">Disponibles</div>
+          <h2 class="fw-bold text-primary">{{ disponibles }}</h2>
+          <p class="mb-0 text-muted">Equipos listos para préstamo.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <div class="text-muted small">Prestados</div>
+          <h2 class="fw-bold text-warning">{{ prestados }}</h2>
+          <p class="mb-0 text-muted">Equipos actualmente en uso.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <div class="text-muted small">Usuarios</div>
+          <h2 class="fw-bold text-dark">{{ total_usuarios }}</h2>
+          <p class="mb-0 text-muted">Usuarios registrados en el sistema.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row g-4 mb-4">
+
+    <div class="col-lg-4">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-header text-white fw-bold" style="background:#0b4a3b;">
+          Estado de equipos
+        </div>
+
+        <div class="card-body">
+          {% for estado, total in estado_counts.items() %}
+          <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+            <span>{{ estado }}</span>
+            <span class="badge bg-success">{{ total }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-header text-white fw-bold" style="background:#0b4a3b;">
+          Usuarios por tipo
+        </div>
+
+        <div class="card-body">
+          {% for tipo, total in tipo_counts.items() %}
+          <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+            <span>{{ tipo }}</span>
+            <span class="badge bg-primary">{{ total }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-header text-white fw-bold" style="background:#0b4a3b;">
+          Préstamos por estado
+        </div>
+
+        <div class="card-body">
+          {% for estado, total in prestamo_counts.items() %}
+          <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+            <span>{{ estado }}</span>
+            <span class="badge bg-warning text-dark">{{ total }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="card shadow-sm border-0">
+    <div class="card-header text-white fw-bold" style="background:#0b4a3b;">
+      Últimos movimientos de préstamo
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Equipo</th>
+            <th>Usuario</th>
+            <th>Fecha solicitud</th>
+            <th>Fecha préstamo</th>
+            <th>Devolución estimada</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for p in prestamos_recientes %}
+          <tr>
+            <td>
+              <strong>{{ p.equipo.nombre }}</strong><br>
+              <small class="text-muted">
+                {{ p.equipo.tipo }}
+                {% if p.equipo.numero_serie %}
+                  · {{ p.equipo.numero_serie }}
+                {% endif %}
+              </small>
+            </td>
+
+            <td>
+              <strong>{{ p.usuario.nombre_completo }}</strong><br>
+              <small class="text-muted">
+                {{ p.usuario.tipo_usuario }} · {{ p.usuario.matricula }}
+              </small>
+            </td>
+
+            <td>
+              {% if p.fecha_solicitud %}
+                {{ p.fecha_solicitud.strftime('%d/%m/%Y') }}
+              {% else %}
+                <span class="text-muted">Sin fecha</span>
+              {% endif %}
+            </td>
+
+            <td>
+              {% if p.fecha_prestamo %}
+                {{ p.fecha_prestamo.strftime('%d/%m/%Y') }}
+              {% else %}
+                <span class="text-muted">Pendiente</span>
+              {% endif %}
+            </td>
+
+            <td>
+              {% if p.fecha_devolucion_estimada %}
+                {{ p.fecha_devolucion_estimada.strftime('%d/%m/%Y') }}
+              {% else %}
+                <span class="text-muted">Sin fecha</span>
+              {% endif %}
+            </td>
+
+            <td>
+              {% if p.estado == 'Pendiente' %}
+                <span class="badge bg-warning text-dark">Pendiente</span>
+              {% elif p.estado == 'Aprobado' %}
+                <span class="badge bg-primary">Aprobado</span>
+              {% elif p.estado == 'Devuelto' %}
+                <span class="badge bg-success">Devuelto</span>
+              {% elif p.estado == 'Rechazado' %}
+                <span class="badge bg-danger">Rechazado</span>
+              {% else %}
+                <span class="badge bg-secondary">{{ p.estado }}</span>
+              {% endif %}
+            </td>
+          </tr>
+
+          {% else %}
+          <tr>
+            <td colspan="6" class="text-center text-muted py-4">
+              No hay movimientos de préstamo registrados.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

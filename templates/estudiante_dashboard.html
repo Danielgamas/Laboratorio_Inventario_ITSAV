@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Portal estudiante | Sistema ISC{% endblock %}
+{% block content %}
+<section class="content-section">
+  <div class="container">
+    <div class="student-hero mb-4">
+      <div>
+        <span class="top-kicker">PORTAL ESTUDIANTE</span>
+        <h1>Bienvenido, {{ nombre_sesion or 'estudiante' }}</h1>
+        <p>Consulta equipos disponibles y envía solicitudes de préstamo al encargado del laboratorio.</p>
+      </div>
+      <a href="{{ url_for('estudiante_equipos') }}" class="btn btn-sie-gold"><i class="bi bi-laptop"></i> Solicitar equipo</a>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-md-4"><div class="stat-card"><span>Equipos disponibles</span><strong>{{ disponibles }}</strong><i class="bi bi-check-circle"></i></div></div>
+      <div class="col-md-4"><div class="stat-card warning"><span>Solicitudes pendientes</span><strong>{{ pendientes }}</strong><i class="bi bi-hourglass-split"></i></div></div>
+      <div class="col-md-4"><div class="stat-card success"><span>Préstamos activos</span><strong>{{ activos }}</strong><i class="bi bi-arrow-left-right"></i></div></div>
+    </div>
+
+    <div class="card sie-card">
+      <div class="card-header bg-white fw-bold">Mis movimientos recientes</div>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead><tr><th>Equipo</th><th>Solicitud</th><th>Devolución estimada</th><th>Estado</th></tr></thead>
+          <tbody>
+            {% for p in mis_solicitudes %}
+            <tr>
+              <td>{{ p.equipo.nombre }}<br><small class="text-muted">{{ p.equipo.numero_inventario }}</small></td>
+              <td>{{ p.fecha_prestamo.strftime('%d/%m/%Y %H:%M') }}</td>
+              <td>{{ p.fecha_devolucion_estimada.strftime('%d/%m/%Y') }}</td>
+              <td><span class="badge {{ 'bg-warning text-dark' if p.estado=='Solicitado' else 'bg-success' if p.estado=='Devuelto' else 'bg-primary' if p.estado=='Activo' else 'bg-danger' if p.estado=='Vencido' else 'bg-secondary' }}">{{ p.estado }}</span></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" class="text-center text-muted py-4">Todavía no tienes solicitudes registradas.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

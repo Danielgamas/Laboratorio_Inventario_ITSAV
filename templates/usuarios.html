@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+{% block title %}Usuarios | Sistema de Inventario ISC{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+
+  <!-- FORMULARIO DE REGISTRO MANUAL -->
+  <div class="col-lg-4">
+    <div class="card shadow-sm border-0 sticky-form">
+      <div class="card-header bg-primary text-white fw-bold">
+        <i class="bi bi-person-plus"></i> Registrar usuario
+      </div>
+
+      <div class="card-body">
+        <form method="post">
+
+          <div class="mb-2">
+            <label class="form-label">Nombre completo*</label>
+            <input 
+              type="text" 
+              name="nombre_completo" 
+              class="form-control" 
+              placeholder="Ej. Daniel Alexander Gamas Rodriguez"
+              required>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Matrícula / No. control / No. empleado*</label>
+            <input 
+              type="text" 
+              name="matricula" 
+              class="form-control" 
+              placeholder="Ej. 226Z0000"
+              required>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Carrera o área*</label>
+            <input 
+              type="text" 
+              name="carrera_area" 
+              class="form-control" 
+              value="Ingeniería en Sistemas Computacionales"
+              required>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Correo</label>
+            <input 
+              type="email" 
+              name="correo" 
+              class="form-control" 
+              placeholder="correo@ejemplo.com">
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Tipo de usuario</label>
+            <select name="tipo_usuario" class="form-select">
+              <option value="Estudiante">Estudiante</option>
+              <option value="Docente">Docente</option>
+              <option value="Encargado">Encargado</option>
+            </select>
+          </div>
+
+          <input type="hidden" name="activo" value="1">
+
+          <button class="btn btn-primary w-100 mt-3" type="submit">
+            <i class="bi bi-save"></i> Guardar usuario
+          </button>
+        </form>
+
+        <div class="alert alert-info small mt-3 mb-0">
+          <strong>Nota:</strong> este formulario registra usuarios manualmente desde el panel administrativo.
+          Los estudiantes y docentes también pueden registrarse desde la pantalla pública de registro.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LISTADO DE USUARIOS -->
+  <div class="col-lg-8">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <h1 class="section-title mb-0">Usuarios registrados</h1>
+        <p class="text-muted mb-0">
+          Administración de estudiantes, docentes y encargados del laboratorio ISC.
+        </p>
+      </div>
+    </div>
+
+    <!-- BUSCADOR -->
+    <form class="row g-2 mb-3" method="get">
+      <div class="col-md-10">
+        <input 
+          type="text"
+          name="q" 
+          value="{{ q }}" 
+          class="form-control" 
+          placeholder="Buscar por nombre, matrícula, correo, carrera o tipo de usuario">
+      </div>
+
+      <div class="col-md-2">
+        <button class="btn btn-outline-primary w-100" type="submit">
+          <i class="bi bi-search"></i>
+        </button>
+      </div>
+    </form>
+
+    <div class="card shadow-sm border-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Matrícula</th>
+              <th>Usuario</th>
+              <th>Área</th>
+              <th>Tipo</th>
+              <th>Cuenta</th>
+              <th>Estado</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for u in usuarios %}
+            <tr>
+              <td class="fw-semibold">
+                {{ u.matricula }}
+              </td>
+
+              <td>
+                <div class="fw-semibold">{{ u.nombre_completo }}</div>
+                <small class="text-muted">
+                  {{ u.correo if u.correo else 'Sin correo registrado' }}
+                </small>
+              </td>
+
+              <td>
+                {{ u.carrera_area }}
+              </td>
+
+              <td>
+                {% if u.tipo_usuario == 'Administrador' %}
+                  <span class="badge bg-dark">Administrador</span>
+                {% elif u.tipo_usuario == 'Encargado' %}
+                  <span class="badge bg-warning text-dark">Encargado</span>
+                {% elif u.tipo_usuario == 'Docente' %}
+                  <span class="badge bg-info text-dark">Docente</span>
+                {% else %}
+                  <span class="badge bg-primary">Estudiante</span>
+                {% endif %}
+              </td>
+
+              <td>
+                {% if u.cuentas %}
+                  {% for c in u.cuentas %}
+                    <div class="mb-1">
+                      <span class="badge bg-secondary">{{ c.rol }}</span>
+                      <br>
+                      <small class="text-muted">{{ c.usuario }}</small>
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  <span class="text-muted small">Sin cuenta de login</span>
+                {% endif %}
+              </td>
+
+              <td>
+                {% if u.activo %}
+                  <span class="badge bg-success">
+                    <i class="bi bi-check-circle"></i> Activo
+                  </span>
+                {% else %}
+                  <span class="badge bg-danger">
+                    <i class="bi bi-clock-history"></i> Pendiente/Inactivo
+                  </span>
+                {% endif %}
+              </td>
+
+              <td class="text-center text-nowrap">
+
+                <a 
+                  class="btn btn-sm btn-outline-primary" 
+                  href="{{ url_for('editar_usuario', id=u.id) }}"
+                  title="Editar usuario">
+                  <i class="bi bi-pencil"></i>
+                </a>
+
+                {% if not u.activo %}
+                <form 
+                  method="post" 
+                  action="{{ url_for('activar_usuario', id=u.id) }}" 
+                  class="d-inline">
+                  <button 
+                    class="btn btn-sm btn-outline-success" 
+                    title="Activar usuario">
+                    <i class="bi bi-check-circle"></i>
+                  </button>
+                </form>
+                {% else %}
+                <form 
+                  method="post" 
+                  action="{{ url_for('desactivar_usuario', id=u.id) }}" 
+                  class="d-inline"
+                  onsubmit="return confirm('¿Deseas desactivar este usuario? También se desactivará su cuenta de acceso.')">
+                  <button 
+                    class="btn btn-sm btn-outline-warning" 
+                    title="Desactivar usuario">
+                    <i class="bi bi-slash-circle"></i>
+                  </button>
+                </form>
+                {% endif %}
+
+                <form 
+                  method="post" 
+                  action="{{ url_for('eliminar_usuario', id=u.id) }}" 
+                  class="d-inline"
+                  onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?')">
+                  <button 
+                    class="btn btn-sm btn-outline-danger" 
+                    title="Eliminar usuario">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+
+              </td>
+            </tr>
+
+            {% else %}
+            <tr>
+              <td colspan="7" class="text-center text-muted py-4">
+                <i class="bi bi-info-circle"></i> No hay usuarios registrados.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+
+        </table>
+      </div>
+    </div>
+
+    <div class="alert alert-secondary small mt-3">
+      <strong>Control de acceso:</strong> los estudiantes y docentes pueden registrarse desde el portal público.
+      Las cuentas de encargado pueden quedar pendientes y deben ser activadas desde este panel por un administrador.
+    </div>
+  </div>
+
+</div>
+{% endblock %}

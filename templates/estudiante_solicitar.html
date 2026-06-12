@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Solicitar préstamo | Sistema ISC{% endblock %}
+{% block content %}
+<section class="auth-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-7">
+        <div class="auth-card shadow-lg">
+          <span class="top-kicker dark">SOLICITUD DE PRÉSTAMO</span>
+          <h2 class="fw-bold mt-2">{{ equipo.nombre }}</h2>
+          <p class="text-muted">{{ equipo.numero_inventario }} · {{ equipo.tipo }} · {{ equipo.ubicacion }}</p>
+          <form method="post">
+            <label class="form-label">Fecha estimada de devolución*</label>
+            <input type="date" name="fecha_devolucion_estimada" class="form-control form-control-lg" required>
+            <label class="form-label mt-3">Motivo u observaciones</label>
+            <textarea name="observaciones" class="form-control" rows="4" placeholder="Ejemplo: práctica de redes, exposición, proyecto de clase..."></textarea>
+            <div class="d-flex gap-2 mt-4">
+              <button class="btn btn-sie btn-lg"><i class="bi bi-send"></i> Enviar solicitud</button>
+              <a href="{{ url_for('estudiante_equipos') }}" class="btn btn-outline-secondary btn-lg">Cancelar</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

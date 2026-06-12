@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard administrador | Sistema ISC{% endblock %}
+{% block content %}
+<section class="content-section">
+  <div class="container-fluid px-4">
+    <div class="dashboard-header mb-4">
+      <div>
+        <span class="top-kicker dark">PANEL ADMINISTRATIVO</span>
+        <h1>Control general del laboratorio ISC</h1>
+        <p>Indicadores operativos del inventario, solicitudes, préstamos activos y recursos disponibles.</p>
+      </div>
+      <a href="{{ url_for('prestamos') }}" class="btn btn-sie"><i class="bi bi-arrow-left-right"></i> Gestionar préstamos</a>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-md-6 col-xl-3"><div class="stat-card"><span>Total de equipos</span><strong>{{ total_equipos }}</strong><i class="bi bi-pc-display-horizontal"></i></div></div>
+      <div class="col-md-6 col-xl-3"><div class="stat-card success"><span>Disponibles</span><strong>{{ disponibles }}</strong><i class="bi bi-check2-circle"></i></div></div>
+      <div class="col-md-6 col-xl-3"><div class="stat-card warning"><span>Prestados</span><strong>{{ prestados }}</strong><i class="bi bi-arrow-left-right"></i></div></div>
+      <div class="col-md-6 col-xl-3"><div class="stat-card danger"><span>Solicitudes pendientes</span><strong>{{ solicitudes }}</strong><i class="bi bi-hourglass-split"></i></div></div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <div class="card sie-card h-100">
+          <div class="card-header bg-white fw-bold">Últimos movimientos</div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead><tr><th>Equipo</th><th>Usuario</th><th>Fecha</th><th>Estado</th></tr></thead>
+              <tbody>
+              {% for p in ultimos_prestamos %}
+              <tr>
+                <td>{{ p.equipo.numero_inventario }}<br><small class="text-muted">{{ p.equipo.nombre }}</small></td>
+                <td>{{ p.usuario.nombre_completo }}<br><small class="text-muted">{{ p.usuario.matricula }}</small></td>
+                <td>{{ p.fecha_prestamo.strftime('%d/%m/%Y') }}</td>
+                <td><span class="badge {{ 'bg-warning text-dark' if p.estado=='Solicitado' else 'bg-success' if p.estado=='Devuelto' else 'bg-primary' if p.estado=='Activo' else 'bg-danger' if p.estado=='Vencido' else 'bg-secondary' }}">{{ p.estado }}</span></td>
+              </tr>
+              {% else %}
+              <tr><td colspan="4" class="text-center text-muted py-4">Sin movimientos registrados.</td></tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="card sie-card h-100">
+          <div class="card-header bg-white fw-bold">Equipos registrados recientemente</div>
+          <div class="list-group list-group-flush">
+            {% for e in equipos_recientes %}
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+              <div><strong>{{ e.nombre }}</strong><br><small class="text-muted">{{ e.numero_inventario }} · {{ e.tipo }}</small></div>
+              <span class="badge badge-estado {{ e.estado|lower }}">{{ e.estado }}</span>
+            </div>
+            {% else %}
+            <div class="list-group-item text-muted">Sin equipos.</div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

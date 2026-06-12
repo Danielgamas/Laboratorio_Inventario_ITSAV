@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block title %}Registro | Sistema de Inventario ISC{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8">
+
+        <div class="auth-card shadow-lg">
+
+          <div class="text-center mb-4">
+            <img 
+              src="{{ url_for('static', filename='logo.png') }}" 
+              alt="ITSAV" 
+              class="login-logo">
+
+            <div class="top-kicker dark mt-3">
+              REGISTRO DE USUARIO
+            </div>
+
+            <h2 class="fw-bold mt-2">
+              Crear cuenta de acceso
+            </h2>
+
+            <p class="text-muted mb-0">
+              Sistema web de inventario y préstamos del laboratorio de ISC
+            </p>
+          </div>
+
+          <form method="post">
+
+            <div class="row g-3">
+
+              <div class="col-md-12">
+                <label class="form-label">Nombre completo*</label>
+                <input 
+                  type="text" 
+                  name="nombre_completo" 
+                  class="form-control form-control-lg" 
+                  placeholder="Ej. Daniel Alexander Gamas Rodriguez" 
+                  required>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Matrícula / No. empleado*</label>
+                <input 
+                  type="text" 
+                  name="matricula" 
+                  class="form-control form-control-lg" 
+                  placeholder="Ej. 226Z0000" 
+                  required>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Correo electrónico*</label>
+                <input 
+                  type="email" 
+                  name="correo" 
+                  class="form-control form-control-lg" 
+                  placeholder="correo@ejemplo.com" 
+                  required>
+              </div>
+
+              <div class="col-md-8">
+                <label class="form-label">Carrera o área*</label>
+                <input 
+                  type="text" 
+                  name="carrera_area" 
+                  class="form-control form-control-lg" 
+                  value="Ingeniería en Sistemas Computacionales" 
+                  required>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label">Tipo de usuario*</label>
+                <select 
+                  name="tipo_usuario" 
+                  class="form-select form-select-lg" 
+                  required>
+                  <option value="Estudiante">Estudiante</option>
+                  <option value="Docente">Docente</option>
+                  <option value="Encargado">Encargado</option>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Contraseña*</label>
+                <input 
+                  type="password" 
+                  name="password" 
+                  class="form-control form-control-lg" 
+                  placeholder="Mínimo 4 caracteres" 
+                  required>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Confirmar contraseña*</label>
+                <input 
+                  type="password" 
+                  name="confirmar_password" 
+                  class="form-control form-control-lg" 
+                  placeholder="Repite tu contraseña" 
+                  required>
+              </div>
+
+            </div>
+
+            <div class="alert alert-info mt-4 small">
+              <strong>Nota:</strong> las cuentas de estudiantes y docentes se activan automáticamente.
+              Las cuentas de encargado quedan pendientes de autorización por el administrador.
+            </div>
+
+            <button class="btn btn-sie w-100 btn-lg mt-2" type="submit">
+              <i class="bi bi-person-plus"></i> Crear cuenta
+            </button>
+
+          </form>
+
+          <div class="text-center mt-4">
+            <a href="{{ url_for('login') }}" class="text-decoration-none">
+              ¿Ya tienes cuenta? Inicia sesión aquí
+            </a>
+          </div>
+
+          <div class="text-center mt-2">
+            <a href="{{ url_for('index') }}" class="text-decoration-none text-muted">
+              Volver al inicio
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
